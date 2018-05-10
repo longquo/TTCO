@@ -1,4 +1,4 @@
-REM "Long Truong <lontru@rm.dk>" ©
+REM "Long Truong ©"
 REM May 2018
 @ECHO off
 
@@ -21,7 +21,7 @@ ECHO. # x - EXIT                                       #
 ECHO. #------------------------------------------------#
 ECHO.
 SET /P Choice=Menu Choose:
-set domain=onerm
+
 set "TIME="
 
 IF %Choice%==1 GOTO Silent_Install
