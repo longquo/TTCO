@@ -1,7 +1,7 @@
 REM "Long Truong <lontru@rm.dk>" ©
 REM May 2018
 @ECHO off
-pause
+
 :MENU
 cls
 color 0A
