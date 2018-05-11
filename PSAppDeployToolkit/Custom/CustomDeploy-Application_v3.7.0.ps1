@@ -1,4 +1,3 @@
-﻿$Stopwatch = [Diagnostics.Stopwatch]::StartNew()
 <#
 .SYNOPSIS
 	This script performs the installation or uninstallation of an application(s).
@@ -54,7 +53,8 @@ Param (
 	[switch]$DisableLogging = $false
 )
 
-
+$Stopwatch = [Diagnostics.Stopwatch]::StartNew()
+ 
 Try {
 	## Set the script execution policy for this process
 	Try { Set-ExecutionPolicy -ExecutionPolicy 'ByPass' -Scope 'Process' -Force -ErrorAction 'Stop' } Catch {}
