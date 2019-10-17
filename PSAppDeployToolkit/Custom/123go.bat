@@ -1,5 +1,5 @@
 REM "Long Truong ©"
-REM May 2018
+REM Oct 2019
 @ECHO off
 
 :MENU
@@ -14,6 +14,7 @@ ECHO. # 2 - Silent_Uninstall                           #
 ECHO. # 3 - Interactive_Install                        #
 ECHO. # 4 - Interactive_Uninstall                      #
 ECHO. #------------------------------------------------#
+ECHO. # e - Explorer current path                      #
 ECHO. # o - Open log dir                               #
 ECHO. # f - Flush log                                  #
 ECHO. #------------------------------------------------#
@@ -28,6 +29,7 @@ IF %Choice%==1 GOTO Silent_Install
 IF %Choice%==2 GOTO Silent_Uninstall
 IF %Choice%==3 GOTO Interactive_Install
 IF %Choice%==4 GOTO Interactive_Uninstall
+IF %Choice%==e GOTO Explorer
 IF %Choice%==o GOTO OpenLOG
 IF %Choice%==f GOTO FlushLOG
 IF %Choice%==x GOTO EOF
@@ -119,6 +121,11 @@ IF EXIST %windir%\Logs\Software\NUL (
             GOTO MENU
         )  
     )
+pause
+GOTO MENU
+REM #####################################################################################################################
+:Explorer
+start . "%~dp0"
 pause
 GOTO MENU
 REM #####################################################################################################################
