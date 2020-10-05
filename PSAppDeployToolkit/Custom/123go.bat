@@ -5,7 +5,7 @@ REM Oct 2019
 :MENU
 cls
 color 0A
-ECHO %cd%
+ECHO %~dp0
 ECHO. 
 ECHO.   Deployment CHOOSER %~n0                        
 ECHO. #------------------------------------------------#
@@ -45,10 +45,10 @@ GOTO MENU
 REM #####################################################################################################################
 :Repair
 cls
-ECHO %cd%
+ECHO %~dp0
 color 06
 ECHO. ### Repair ###
-ECHO %cd%
+ECHO %~dp0
 set "Start=%TIME%"
 "%~dp0Deploy-Application.exe" "Deploy-Application.ps1" -DeploymentType "Repair" -DeployMode "Silent"
 set "End=%TIME%"
@@ -60,10 +60,10 @@ GOTO MENU
 REM #####################################################################################################################
 :Silent_Install
 cls
-ECHO %cd%
+ECHO %~dp0
 color 06
 ECHO. ### SILENT INSTALL ###
-ECHO %cd%
+ECHO %~dp0
 set "Start=%TIME%"
 "%~dp0Deploy-Application.exe" "Deploy-Application.ps1" -DeploymentType "Install" -DeployMode "Silent"
 set "End=%TIME%"
@@ -75,10 +75,10 @@ GOTO MENU
 REM #####################################################################################################################
 :Silent_Uninstall
 cls
-ECHO %cd%
+ECHO %~dp0
 color 06
 ECHO. ### SILENT UNINSTALL ###
-ECHO %cd%
+ECHO %~dp0
 set "Start=%TIME%"
 "%~dp0Deploy-Application.exe" "Deploy-Application.ps1" -DeploymentType "Uninstall" -DeployMode "Silent"
 set "End=%TIME%"
@@ -90,10 +90,10 @@ GOTO MENU
 REM #####################################################################################################################
 :Interactive_Install
 cls
-ECHO %cd%
+ECHO %~dp0
 color 06
 ECHO. ### INTERACTIVE INSTALL ###
-ECHO %cd%
+ECHO %~dp0
 set "Start=%TIME%"
 "%~dp0Deploy-Application.exe" "Deploy-Application.ps1" -DeploymentType "Install" -DeployMode "Interactive"
 set "End=%TIME%"
@@ -105,10 +105,10 @@ GOTO MENU
 REM #####################################################################################################################
 :Interactive_Uninstall
 cls
-ECHO %cd%
+ECHO %~dp0
 color 06
 ECHO. ### INTERACTIVE UNINSTALL ###
-ECHO %cd%
+ECHO %~dp0
 set "Start=%TIME%"
 "%~dp0Deploy-Application.exe" "Deploy-Application.ps1" -DeploymentType "Uninstall" -DeployMode "Interactive"
 set "End=%TIME%"
