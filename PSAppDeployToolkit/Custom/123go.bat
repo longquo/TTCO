@@ -1,5 +1,5 @@
 REM "Long Truong ©"
-REM Oct 2020
+REM Oct 2019
 @ECHO off
 
 :MENU
@@ -45,6 +45,7 @@ GOTO MENU
 REM #####################################################################################################################
 :Repair
 cls
+ECHO %cd%
 color 06
 ECHO. ### Repair ###
 ECHO %cd%
@@ -59,6 +60,7 @@ GOTO MENU
 REM #####################################################################################################################
 :Silent_Install
 cls
+ECHO %cd%
 color 06
 ECHO. ### SILENT INSTALL ###
 ECHO %cd%
@@ -73,6 +75,7 @@ GOTO MENU
 REM #####################################################################################################################
 :Silent_Uninstall
 cls
+ECHO %cd%
 color 06
 ECHO. ### SILENT UNINSTALL ###
 ECHO %cd%
@@ -87,6 +90,7 @@ GOTO MENU
 REM #####################################################################################################################
 :Interactive_Install
 cls
+ECHO %cd%
 color 06
 ECHO. ### INTERACTIVE INSTALL ###
 ECHO %cd%
@@ -101,6 +105,7 @@ GOTO MENU
 REM #####################################################################################################################
 :Interactive_Uninstall
 cls
+ECHO %cd%
 color 06
 ECHO. ### INTERACTIVE UNINSTALL ###
 ECHO %cd%
