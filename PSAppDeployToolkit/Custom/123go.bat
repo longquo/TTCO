@@ -1,5 +1,5 @@
 REM "Long Truong ©"
-REM Oct 2019
+REM Oct 2020
 @ECHO off
 
 :MENU
@@ -9,6 +9,7 @@ ECHO %cd%
 ECHO. 
 ECHO.   Deployment CHOOSER %~n0                        
 ECHO. #------------------------------------------------#
+ECHO. # 0 - Repair                                     #
 ECHO. # 1 - Silent_Install                             #
 ECHO. # 2 - Silent_Uninstall                           #
 ECHO. # 3 - Interactive_Install                        #
@@ -25,6 +26,7 @@ SET /P Choice=Menu Choose:
 
 set "TIME="
 
+IF %Choice%==0 GOTO Repair
 IF %Choice%==1 GOTO Silent_Install
 IF %Choice%==2 GOTO Silent_Uninstall
 IF %Choice%==3 GOTO Interactive_Install
@@ -40,6 +42,20 @@ pause
 CLS
 GOTO MENU
 
+REM #####################################################################################################################
+:Repair
+cls
+color 06
+ECHO. ### Repair ###
+ECHO %cd%
+set "Start=%TIME%"
+"%~dp0Deploy-Application.exe" "Deploy-Application.ps1" -DeploymentType "Repair" -DeployMode "Silent"
+set "End=%TIME%"
+call :timediff Elapsed Start End
+color 0C
+echo Elapsed Time: %Elapsed%
+pause
+GOTO MENU
 REM #####################################################################################################################
 :Silent_Install
 cls
