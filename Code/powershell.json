@@ -1,0 +1,205 @@
+{
+	// Place your snippets for powershell here. Each snippet is defined under a snippet name and has a prefix, body and 
+	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
+	// same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+
+	"Write-Log" :{
+		"prefix": "Write-log",
+		"body": [
+			"Write-Log -Message \"Message\" -Source \\$$installPhase -LogType 'CMTrace' -Severity '1'"
+		],
+		"description": "Write-Log"
+	},
+	"env": {
+		"prefix": "env",
+		"body": "## Commonly used PSADT env variables\r\n$envCommonDesktop           # C:\\Users\\Public\\Desktop\r\n$envCommonStartMenuPrograms # C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\r\n$envProgramFiles            # C:\\Program Files\r\n$envProgramFilesX86         # C:\\Program Files (x86)\r\n$envProgramData             # c:\\ProgramData\r\n$envUserDesktop             # c:\\Users\\{user currently logged in}\\Desktop\r\n$envUserStartMenuPrograms   # c:\\Users\\{user currently logged in}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\r\n$envSystemDrive             # c:\r\n$envWinDir                  # c:\\windows",
+		"description": "Commonly used PSADT env variables"
+	},
+	"uninstall": {
+		"prefix": "uninstall",
+		"body": "## Uninstall a number of msi codes\n\"{2E873893-A883-4C06-8308-7B491D58F3D6}\", <# Example #>`\n\"{2E873893-A883-4C06-8308-7B491D58F3D6}\", <# Example #>`\n\"{2E873893-A883-4C06-8308-7B491D58F3D6}\", <# Example #>`\n\"{2E873893-A883-4C06-8308-7B491D58F3D6}\", <# Example #>`\n\"{2E873893-A883-4C06-8308-7B491D58F3D6}\", <# Example #>`\n\"{B234DC00-1003-47E7-8111-230AA9E6BF10}\" <# Last example cannot have a comma after the double quotes #>`\n| ForEach-Object { Execute-MSI -Action 'Uninstall' -Path \"$$_\" } <# foreach item, uninstall #>",
+		"description": "Uninstall a number of msi codes"
+	},
+	"ProfilePaths": {
+		"prefix": "ProfilePaths",
+		"body": "## Copy a file to the correct relative location for all user accounts\n# grabbed from here: http://psappdeploytoolkit.com/forums/topic/copy-file-to-all-users-currently-logged-in-and-for-all-future-users/\n$ProfilePaths = Get-UserProfiles | Select-Object -ExpandProperty 'ProfilePath'\nForEach ($$Profile in $$ProfilePaths) {\n    Copy-File -Path \"$$dirFiles\\Example\\example.ini\" -Destination \"$$Profile\\Example\\To\\Path\\\"\n}",
+		"description": "Copy a file to the correct relative location for all user accounts"
+	},
+	"reg": {
+		"prefix": "reg",
+		"body": "Execute-Process -FilePath \"reg.exe\" -Parameters \"IMPORT `\"$$dirFiles\\name-of-reg-export.reg`\"\" -PassThru",
+		"description": "import a .reg key"
+	},
+	"Remove-File": {
+		"prefix": "Remove-File",
+		"body": "## Remove a bunch of specific files\n\"$envCommonDesktop\\Example 1.lnk\", <# Example #>`\n\"$envCommonDesktop\\Example 2.lnk\", <# Example #>`\n\"$envCommonDesktop\\Example 3.lnk\" <# Careful with the last item to not include a comma after the double quote #>`\n| ForEach-Object { Remove-File -Path \"$$_\" }",
+		"description": "Remove a bunch of specific files"
+	},
+	"Remove-Folder": {
+		"prefix": "Remove-Folder",
+		"body": "## Remove a bunch of specific folders and their contents\n\"$envSystemDrive\\Example Dir1\",  <# Example #>`\n\"$envProgramFiles\\Example Dir2\",  <# Example #>`\n\"$envProgramFiles\\Example Dir3\",  <# Example #>`\n\"$envProgramFilesX86\\Example Dir4\",  <# Example #>`\n\"$envSystemRoot\\Example4\" <# Careful with the last item to not include a comma after the double quote #>`\n| ForEach-Object { Remove-Folder -Path \"$$_\" }",
+		"description": "Remove a bunch of specific folders and their contents"
+	},
+	"certutil": {
+		"prefix": "certutil",
+		"body": "## Import a certificate to system 'Trusted Publishers' store.. helpful for clickOnce installers & importing drivers\n# (for references sake, I saved as base64, unsure if DER encoded certs work)\nExecute-Process -Path \"certutil.exe\" -Parameters \"-f -addstore -enterprise TrustedPublisher `\"$$dirFiles\\certname.cer`\"\"\nWrite-Log -Message \"Imported Cert\" -Source $deployAppScriptFriendlyName",
+		"description": "import a certificate to system trusted publishers store"
+	},
+	"pnputil": {
+		"prefix": "pnputil",
+		"body": "## Import a driver (note, >= win7 must be signed, and cert must be in trusted publishers store) \nExecute-Process -Path 'PnPutil.exe' -Parameters \"/a `\"$dirFiles\\USB Drivers\\driver.inf`\"\"",
+		"description": "Import a driver"
+	},
+	"New-Shortcut": {
+		"prefix": "New-Shortcut",
+		"body": "## To Create a shortcut\nNew-Shortcut -Path \"$$envCommonStartMenuPrograms\\My Shortcut.lnk\" `\n    -TargetPath \"$$envWinDir\\system32\\notepad.exe\" `\n    -Arguments \"--example-argument --example-argument-two\" `\n    -Description 'Notepad' `\n    -WorkingDirectory \"$$envHomeDrive\\$envHomePath\"",
+		"description": "New Shortcut"
+	},
+	"acl": {
+		"prefix": "acl",
+		"body": "## Modify ACL on a file\n# first load the ACL\n$$acl_to_modify = \"$$envProgramData\\Example\\File.txt\"\n$$acl = Get-Acl \"$$acl_to_modify\"\n# add another entry to the ACL list (in this case, add all users to have full control)\n$$ar = New-Object System.Security.AccessControl.FileSystemAccessRule(\"BUILTIN\\Users\", \"FullControl\", \"None\", \"None\", \"Allow\")\n$$acl.SetAccessRule($$ar)\n# re-write the acl on the target file\nSet-Acl \"$$acl_to_modify\" $$acl\n\n## Modify ACL on a folder\n$$folder_to_change = \"$$envSystemDrive\\Example_Folder\"\n$$acl = Get-Acl \"$$folder_to_change\"\n$$ar = New-Object System.Security.AccessControl.FileSystemAccessRule(\"BUILTIN\\Users\", \"FullControl\", \"ContainerInherit,ObjectInherit\", \"None\", \"Allow\")\n$$acl.SetAccessRule($$ar)\nSet-Acl \"$$folder_to_change\" $$acl  \n",
+		"description": "Modify ACL folder/file"
+	},
+	"environment": {
+		"prefix": "environment",
+		"body": "## Add to environment variables (specifically PATH in this case)\n# The first input in the .NET code can have Path subtituted for any other environemnt variable name (gci env: to see what is presently set)\n$$path_addition = \"C:\\bin\"\n# add $$path_addition to permanent system wide path\n[Environment]::SetEnvironmentVariable(\"Path\", $$env:Path + \";\" + $$path_addition, \"Machine\")\n# add $$path_addition to permanent user specific path\n[Environment]::SetEnvironmentVariable(\"Path\", $$env:Path + \";\" + $$path_addition, \"User\")\n# add $$path_addition to the process level path only (i.e. when you quit script, it will no longer be applied)\n[Environment]::SetEnvironmentVariable(\"Path\", $$env:Path + \";\" + $$path_addition, \"Process\")\n",
+		"description": "add to environment variables"
+	},
+	"Exit-Script": {
+		"prefix": "Exit-Script",
+		"body": "# exit codes for reboot required\r\n# soft reboot <- will not 'force' restart, and sccm will progress past, but will nag to restart afterward\r\nExit-Script -ExitCode 3010\r\n# hard reboot <- does not 'force' restart, but sccm won't proceed past any pre-reqs without reboot\r\nExit-Script -ExitCode 1641",
+		"description": "Exit codes for reboot required"
+	},
+	"Get-Uninstaller": {
+		"prefix": "Get-Uninstaller",
+		"body": "function Get-Uninstaller {\r\n    [CmdletBinding()]\r\n    param(\r\n      [Parameter(Mandatory = $$true)]\r\n      [ValidateNotNullOrEmpty()]\r\n      [string] $$Name\r\n    )\r\n   \r\n    $$local_key     = 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'\r\n    $$machine_key32 = 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'\r\n    $$machine_key64 = 'HKLM:\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'\r\n   \r\n    $$keys = @($$local_key, $$machine_key32, $$machine_key64)\r\n   \r\n    Get-ItemProperty -Path $$keys -ErrorAction 'SilentlyContinue' | Where-Object { ($$_.DisplayName -like \"*$$Name*\") -or ($$_.PsChildName -like \"*$$Name*\") } | Select-Object PsPath,DisplayVersion,DisplayName,UninstallString,InstallSource,InstallLocation,QuietUninstallString,InstallDate\r\n  }",
+		"description": "Get-Uninstaller"
+	},
+	"While": {
+		"prefix": "While",
+		"body": "# pause until example reg key\r\nWhile(!(test-path -path \"HKLM:\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{product-code-hereD}\")) {\r\n  sleep 5;\r\n  Write-Log -Message \"$$appVendor - $$appName - $$appVersion is still not finished installing, sleeping another 5\" -Source $$deployAppScriptFriendlyName;\r\n}\r\n# pause until example file\r\nWhile(!(test-path -path \"$$envCommonDesktop\\Example Shortcut.lnk\")) {\r\n  sleep 5;\r\n  Write-Log -Message \"$$appVendor - $$appName - $$appVersion is still not finished installing, sleeping another 5\" -Source $$deployAppScriptFriendlyName;\r\n}",
+		"description": "Pause until example file"
+	},
+	"<application>.exe": {
+		"prefix": "Execute-Process",
+		"body": "Execute-Process -Path '<application>.exe' -Parameters '/quiet' -WaitForMsiExec:$$true",
+		"description": "Execute-Process"
+	},
+	"Execute-MSI": {
+		"prefix": "Execute-MSI",
+		"body": "Execute-MSI -Action 'Install' -Path \"$$dirFiles\\<application>.msi\" -Parameters 'REBOOT=ReallySuppress /QN'",
+		"description": "Execute-MSI"
+	},
+	"Transform": {
+		"prefix": "Execute-MSI",
+		"body": "Execute-MSI -Action 'Install' -Path 'Adobe_Reader_11.0.0_EN.msi' -Transform 'Adobe_Reader_11.0.0_EN_01.mst'",
+		"description": "Execute-MSI Transform"
+	},
+	"MSP": {
+		"prefix": "Execute-MSI",
+		"body": "Execute-MSI -Action 'Patch' -Path 'Adobe_Reader_11.0.3_EN.msp'",
+		"description": "Execute-MSI MSP"
+	},
+	"vbs": {
+		"prefix": "Execute-Process",
+		"body": "Execute-Process -Path \"cscript.exe\" -Parameters \"$$dirFiles\\whatever.vbs\"",
+		"description": "Execute-Process vbs"
+	},
+	"Copy-File": {
+		"prefix": "Copy-File",
+		"body": "Copy-File -Path \"$$dirSupportFiles\\mms.cfg\" -Destination \"C:\\Windows\\SysWOW64\\Macromed\\Flash\\mms.cfg\"",
+		"description": "To copy and overwrite a file"
+	},
+	"Register-DLL": {
+		"prefix": "Register-DLL",
+		"body": "## Register a DLL module\r\nRegister-DLL -FilePath \"$$dirFiles\\example\\codec.dll\"\r\n# Legacy Approach to above\r\n# Execute-Process -FilePath \"regsvr32.exe\" -Parameters \"/s `\"$$dirFiles\\example\\codec.dll`\"\"\r\n\r\n## Unregister a DLL\r\nUnRegister-DLL -FilePath \"$$envProgramFilesX86\\Vendor\\App\\Temeletry.dll\"",
+		"description": "Register-DLL"
+	},
+	"DynamicDType" :{
+		"prefix": "DynamicDType",
+		"body": [
+			"\\$consoleuser = \\$consoleuser = query session | select-string console | ForEach-Object { -split \\$_ } | Select-Object -index 1",
+			"if (\\$consoleuser)",
+			"{",
+				"[string]\\$DeployMode = 'Interactive'",
+			"} else {",
+				"[string]\\$DeployMode = 'Silent'",
+			"}"
+        ],
+		"description": "DynamicDType"
+	},
+	"Desktop" :{
+		"prefix": "Remove-File",
+		"body": [
+            "Remove-File -Path \"\\$envCommonDesktop\\*.lnk\""
+        ],
+		"description": "Desktop"
+	},
+	"legacy uninstall.exe" :{
+		"prefix": "Get-InstalledApplication",
+		"body": [
+			"$InstalledApplication = Get-InstalledApplication -Name $appName -IncludeUpdatesAndHotfixes",
+			"if ($InstalledApplication){",
+				"if($InstalledApplication.DisplayVersion -eq $appVersion){",
+					"$UninstallString = $($InstalledApplication.UninstallString).replace(\"\",\"\")",
+					"Write-Log -Message $UninstallString -Source $installPhase -LogType 'CMTrace' -Severity '1'",
+					"Execute-Process -Path $UninstallString -Parameters \"/VERYSILENT /NORESTART /LOG=\"\"$configToolkitLogDir/$($installname)_uninstall.log\"\"\" -WindowStyle 'Hidden'",
+				"}",
+			"}"
+        ],
+		"description": "Uninstall"
+	},
+	"not": {
+		"prefix": "Test-Path",
+		"body": "if (-NOT(Test-Path -PathType Leaf -Path \"\"))\r\n{\r\n#Code\r\n}",
+		"description": "Test"
+	},
+	"Null" :{
+		"prefix": "Test-Path",
+		"body": [
+            "if (-not ([string]::IsNullOrEmpty(\"\\$$version\")))",
+			"{",
+				"#Code",
+            "}"
+        ],
+		"description": "Test-Path Leaf"
+	},
+	"Container" :{
+		"prefix": "Test-Path",
+		"body": [
+            "if (Test-Path -PathType Container -Path \"\")",
+			"{",
+				"#Code",
+            "}"
+        ],
+		"description": "Test-Path Container"
+	},
+	"Leaf" :{
+		"prefix": "Test-Path",
+		"body": [
+            "if (Test-Path -PathType Leaf -Path \"\")",
+			"{",
+				"#Code",
+            "}"
+        ],
+		"description": "Test-Path Container"
+	},
+	"InstallName" :{
+		"prefix": "InstallName",
+		"body": [
+			"Set-RegistryKey -Key \"HKEY_LOCAL_MACHINE\\SOFTWARE\\RM\\\\$$installName\" -Name 'Installed' -Value \"$(get-date)\" -Type String",
+			"Remove-RegistryKey -Key \"HKEY_LOCAL_MACHINE\\SOFTWARE\\RM\\\\$$installName\""
+        ],
+		"description": "Test-Path Container"
+	}
+}
