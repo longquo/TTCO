@@ -159,40 +159,25 @@
         ],
 		"description": "Uninstall"
 	},
-	"not": {
-		"prefix": "Test-Path",
-		"body": "if (-NOT(Test-Path -PathType Leaf -Path \"\"))\r\n{\r\n#Code\r\n}",
-		"description": "Test"
-	},
 	"Null" :{
-		"prefix": "Test-Path",
+		"prefix": "IsNullOrEmpty",
 		"body": [
-            "if (-not ([string]::IsNullOrEmpty(\"\\$$version\")))",
+            "if (-not ([string]::IsNullOrEmpty(\"$1\")))",
 			"{",
-				"#Code",
+			"    $0",
             "}"
         ],
-		"description": "Test-Path Leaf"
-	},
-	"Container" :{
-		"prefix": "Test-Path",
-		"body": [
-            "if (Test-Path -PathType Container -Path \"\")",
-			"{",
-				"#Code",
-            "}"
-        ],
-		"description": "Test-Path Container"
+		"description": "IsNullOrEmpty"
 	},
 	"Leaf" :{
 		"prefix": "Test-Path",
 		"body": [
-            "if (Test-Path -PathType Leaf -Path \"\")",
+            "if (Test-Path -Path \"$1\" -PathType ${2|Leaf,Container,Any|})",
 			"{",
-				"#Code",
+			"    $0",
             "}"
         ],
-		"description": "Test-Path Container"
+		"description": "Test-Path"
 	},
 	"InstallName" :{
 		"prefix": "InstallName",
